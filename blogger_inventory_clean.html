@@ -1,0 +1,51 @@
+<!-- Corner Hustle - Clean Centered Inventory Page for Blogger -->
+<div style="display:flex;justify-content:center;margin-top:30px;">
+  <div style="max-width:320px;padding:10px;background:#121212;color:#fff;font-family:'Segoe UI',sans-serif;border-radius:15px;">
+    <h3 style="margin-top:0;">Inventory</h3>
+    <div style="font-size:13px;margin-bottom:8px;">
+      <strong>Items:</strong> <span id="invCount">0</span>
+    </div>
+    <ul id="invList" style="list-style:none;padding:0;margin:0;"></ul>
+  </div>
+</div>
+
+<script>
+if (!localStorage.getItem("inventory")) {
+  localStorage.setItem("inventory", JSON.stringify(["Cellphone", "Bag of Seeds"]));
+}
+let inventory = JSON.parse(localStorage.getItem("inventory"));
+
+function renderInventory() {
+  const invList = document.getElementById("invList");
+  const invCount = document.getElementById("invCount");
+  invCount.textContent = inventory.length;
+  invList.innerHTML = "";
+
+  if (inventory.length === 0) {
+    invList.innerHTML = "<li style='padding:6px;color:#aaa;'>No items found.</li>";
+    return;
+  }
+
+  inventory.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div style="background:#222;padding:10px;margin-bottom:10px;border-radius:8px;">
+        <div style="margin-bottom:6px;">${item}</div>
+        <button class="drop-button" data-index="${index}" style="padding:5px 10px;font-size:12px;border:none;border-radius:5px;background:#444;color:#fff;">Drop</button>
+      </div>`;
+    invList.appendChild(li);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderInventory();
+  document.getElementById("invList").addEventListener("click", function(event) {
+    if (event.target && event.target.classList.contains("drop-button")) {
+      const index = parseInt(event.target.getAttribute("data-index"));
+      inventory.splice(index, 1);
+      localStorage.setItem("inventory", JSON.stringify(inventory));
+      renderInventory();
+    }
+  });
+});
+</script>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Corner Hustle OS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .phone {
+      width: 320px;
+      background: #1c1c1c;
+      padding: 15px;
+      border-radius: 20px;
+      border: 2px solid #444;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .statbar {
+      display: flex;
+      justify-content: space-between;
+      background: #000;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .app-icon {
+      background: #222;
+      padding: 12px;
+      text-align: center;
+      border-radius: 12px;
+    }
+    .app-icon a {
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+    .app-icon .label {
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="title">Corner Hustle OS</div>
+    <div class="statbar">
+      <div>💰 <span id="liveCash">$0</span></div>
+      <div>⭐ <span id="liveXP">0 XP</span></div>
+      <div>🏆 <span id="liveRep">0 REP</span></div>
+    </div>
+    <div class="app-grid">
+      <div class="app-icon"><a href="pages/missions.html">📋<div class="label">Missions</div></a></div>
+      <div class="app-icon"><a href="pages/contacts.html">👤<div class="label">Contacts</div></a></div>
+      <div class="app-icon"><a href="pages/inventory.html">🎒<div class="label">Inventory</div></a></div>
+      <div class="app-icon"><a href="pages/craft.html">⚗️<div class="label">Craft</div></a></div>
+      <div class="app-icon"><a href="pages/map.html">🗺️<div class="label">Map</div></a></div>
+      <div class="app-icon"><a href="pages/log.html">🧾<div class="label">Log</div></a></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

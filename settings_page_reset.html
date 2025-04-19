@@ -1,0 +1,21 @@
+<!-- Settings Page -->
+<div style="max-width:360px;margin:20px auto;padding:15px;background:#101010;font-family:'Segoe UI',sans-serif;color:#fff;border-radius:12px;">
+  <h3 style="text-align:center;margin-bottom:15px;">Settings</h3>
+  <div style="text-align:center;">
+    <button onclick="resetGame()" style="padding:10px 20px;border:none;background:#b33;color:#fff;border-radius:8px;font-weight:bold;">Reset Game</button>
+  </div>
+  <p style="margin-top:15px;font-size:12px;text-align:center;color:#888;">
+    This will clear all progress, inventory, missions, logs, and NPC states.
+  </p>
+</div>
+
+<script>
+function resetGame() {
+  localStorage.removeItem("stats");
+  localStorage.removeItem("inventory");
+  localStorage.removeItem("gameLog");
+  localStorage.removeItem("completedMissions");
+  // Add more localStorage keys if other systems store progress
+  alert("Game has been reset. Reload the page or return to home.");
+}
+</script>

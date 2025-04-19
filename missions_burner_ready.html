@@ -1,0 +1,97 @@
+<!-- Missions Page - Burner OS Compatible -->
+<div style="max-width:360px;margin:20px auto;padding:15px;background:#0f0f0f;font-family:'Segoe UI',sans-serif;color:#fff;border-radius:12px;">
+  <h3 style="text-align:center;margin-bottom:15px;">Available Missions</h3>
+  <select id="npcSelect" onchange="renderNPC(this.value)" style="width:100%;padding:6px;border-radius:6px;background:#1a1a1a;color:#fff;margin-bottom:10px;">
+    <option value="0">Rico (Enforcer)</option>
+    <option value="1">Maya (Courier)</option>
+    <option value="2">Lex (Chemist)</option>
+  </select>
+  <div id="npcMissions"></div>
+</div>
+
+<script>
+const npcs = [
+  {
+    name: "Rico",
+    missions: [
+      { id: "rico1", title: "Protect Turf", reward: 500, xp: 10, rep: 5, heat: 2 },
+      { id: "rico2", title: "Intercept Deal", reward: 800, xp: 15, rep: 7, heat: 3 }
+    ]
+  },
+  {
+    name: "Maya",
+    missions: [
+      { id: "maya1", title: "Run Microdrop to Club", reward: 300, xp: 7, rep: 4, heat: 1 },
+      { id: "maya2", title: "Double Route", reward: 550, xp: 12, rep: 6, heat: 2 }
+    ]
+  },
+  {
+    name: "Lex",
+    missions: [
+      { id: "lex1", title: "Test Synth Sample", reward: 400, xp: 8, rep: 4, heat: 0 },
+      { id: "lex2", title: "Formula Refinement", reward: 600, xp: 14, rep: 6, heat: 1 }
+    ]
+  }
+];
+
+function getStats() {
+  return JSON.parse(localStorage.getItem("stats")) || { xp: 0, rep: 0, cash: 0, heat: 0 };
+}
+function setStats(s) {
+  localStorage.setItem("stats", JSON.stringify(s));
+}
+function getCompleted() {
+  return JSON.parse(localStorage.getItem("completedMissions")) || [];
+}
+function saveCompleted(ids) {
+  localStorage.setItem("completedMissions", JSON.stringify(ids));
+}
+function logEntry(type, message) {
+  const logs = JSON.parse(localStorage.getItem("gameLog")) || [];
+  logs.unshift({ type, message, time: new Date().toLocaleString() });
+  localStorage.setItem("gameLog", JSON.stringify(logs));
+}
+
+function completeMission(npcIndex, missionIndex) {
+  const stats = getStats();
+  const npc = npcs[npcIndex];
+  const mission = npc.missions[missionIndex];
+
+  stats.cash += mission.reward;
+  stats.xp += mission.xp;
+  stats.rep += mission.rep;
+  stats.heat += mission.heat;
+  setStats(stats);
+
+  const completed = getCompleted();
+  completed.push(mission.id);
+  saveCompleted(completed);
+
+  logEntry("mission", `${npc.name}'s mission "${mission.title}" completed. +$${mission.reward}, XP ${mission.xp}, REP ${mission.rep}, Heat +${mission.heat}`);
+  renderNPC(npcIndex);
+}
+
+function renderNPC(index) {
+  const npc = npcs[index];
+  const missions = npc.missions;
+  const completed = getCompleted();
+  const div = document.getElementById("npcMissions");
+  let html = `<h4>${npc.name}'s Missions</h4>`;
+
+  missions.forEach((m, i) => {
+    const done = completed.includes(m.id);
+    html += `
+      <div style="margin-bottom:10px;padding:10px;background:#1a1a1a;border-radius:8px;">
+        <strong>${m.title}</strong><br>
+        Reward: $${m.reward}, XP: ${m.xp}, REP: ${m.rep}, Heat: +${m.heat}<br>
+        ${done
+          ? `<span style='color:#888;'>Completed</span>`
+          : `<button onclick="completeMission(${index}, ${i})" style="margin-top:5px;padding:4px 8px;background:#c33;border:none;color:#fff;border-radius:4px;">Complete</button>`}
+      </div>`;
+  });
+
+  div.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", () => renderNPC(0));
+</script>

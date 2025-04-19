@@ -1,0 +1,64 @@
+<!-- Settings Page with Save and Load -->
+<div style="max-width:360px;margin:20px auto;padding:15px;background:#101010;font-family:'Segoe UI',sans-serif;color:#fff;border-radius:12px;">
+  <h3 style="text-align:center;margin-bottom:15px;">Settings</h3>
+
+  <div style="text-align:center;display:flex;flex-direction:column;gap:12px;">
+    <button onclick="exportGame()" style="padding:10px 20px;border:none;background:#28a;color:#fff;border-radius:8px;font-weight:bold;">Save Game</button>
+    
+    <label for="saveFile" style="font-size:14px;color:#ccc;margin-top:10px;">Load Save:</label>
+    <input type="file" id="saveFile" accept=".json" onchange="importGame(this)" style="margin: 0 auto;display:block;padding:4px 0;" />
+    
+    <button onclick="resetGame()" style="padding:10px 20px;border:none;background:#b33;color:#fff;border-radius:8px;font-weight:bold;">Reset Game</button>
+  </div>
+
+  <p style="margin-top:15px;font-size:12px;text-align:center;color:#888;">
+    Save to download your progress. Load to restore it. Reset clears all game data.
+  </p>
+</div>
+
+<script>
+function resetGame() {
+  localStorage.removeItem("stats");
+  localStorage.removeItem("inventory");
+  localStorage.removeItem("gameLog");
+  localStorage.removeItem("completedMissions");
+  alert("Game has been reset. Reload the page or return to home.");
+}
+
+function exportGame() {
+  const gameData = {
+    stats: localStorage.getItem("stats"),
+    inventory: localStorage.getItem("inventory"),
+    gameLog: localStorage.getItem("gameLog"),
+    completedMissions: localStorage.getItem("completedMissions")
+  };
+  const blob = new Blob([JSON.stringify(gameData)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "corner-hustle-save.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importGame(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.stats) localStorage.setItem("stats", data.stats);
+      if (data.inventory) localStorage.setItem("inventory", data.inventory);
+      if (data.gameLog) localStorage.setItem("gameLog", data.gameLog);
+      if (data.completedMissions) localStorage.setItem("completedMissions", data.completedMissions);
+      alert("Game save loaded. Reload the page to apply changes.");
+    } catch (err) {
+      alert("Invalid save file.");
+    }
+  };
+  reader.readAsText(file);
+}
+</script>

@@ -1,0 +1,64 @@
+<!-- Settings Page: Save with Base64 Code and Burner Refresh -->
+<div style="max-width:360px;margin:20px auto;padding:15px;background:#101010;font-family:'Segoe UI',sans-serif;color:#fff;border-radius:12px;">
+  <h3 style="text-align:center;margin-bottom:15px;">Settings</h3>
+
+  <div style="text-align:center;display:flex;flex-direction:column;gap:12px;">
+    <button onclick="generateSaveCode()" style="padding:10px 20px;border:none;background:#28a;color:#fff;border-radius:8px;font-weight:bold;">Generate Save Code</button>
+    <textarea id="saveCodeOutput" style="width:100%;height:80px;border-radius:6px;padding:6px;background:#1a1a1a;color:#4af;font-size:12px;" readonly></textarea>
+
+    <label for="loadCode" style="font-size:14px;color:#ccc;">Paste Save Code:</label>
+    <textarea id="loadCode" placeholder="Paste save code here..." style="width:100%;height:80px;border-radius:6px;padding:6px;background:#1a1a1a;color:#fff;"></textarea>
+    <button onclick="loadFromCode()" style="padding:10px 20px;border:none;background:#4af;color:#000;border-radius:8px;font-weight:bold;">Load Save</button>
+
+    <button onclick="resetGame()" style="padding:10px 20px;border:none;background:#b33;color:#fff;border-radius:8px;font-weight:bold;">Reset Game</button>
+  </div>
+
+  <p style="margin-top:15px;font-size:12px;text-align:center;color:#888;">
+    Save = copy code to back up progress. Load = paste code to resume. Reset clears all.
+  </p>
+</div>
+
+<script>
+function resetGame() {
+  localStorage.removeItem("stats");
+  localStorage.removeItem("inventory");
+  localStorage.removeItem("gameLog");
+  localStorage.removeItem("completedMissions");
+  localStorage.removeItem("sessionKey");
+  localStorage.setItem("gameReset", Date.now());  // Notify Burner OS
+  alert("Game has been reset. Burner OS will update automatically.");
+}
+
+function generateSaveCode() {
+  const session = crypto.randomUUID();
+  localStorage.setItem("sessionKey", session);
+  const data = {
+    stats: localStorage.getItem("stats"),
+    inventory: localStorage.getItem("inventory"),
+    gameLog: localStorage.getItem("gameLog"),
+    completedMissions: localStorage.getItem("completedMissions"),
+    sessionKey: session
+  };
+  const code = btoa(JSON.stringify(data));
+  document.getElementById("saveCodeOutput").value = code;
+}
+
+function loadFromCode() {
+  try {
+    const input = document.getElementById("loadCode").value.trim();
+    const data = JSON.parse(atob(input));
+    const currentSession = localStorage.getItem("sessionKey");
+    if (data.sessionKey !== currentSession) {
+      alert("This save code does not match your current session.");
+      return;
+    }
+    if (data.stats) localStorage.setItem("stats", data.stats);
+    if (data.inventory) localStorage.setItem("inventory", data.inventory);
+    if (data.gameLog) localStorage.setItem("gameLog", data.gameLog);
+    if (data.completedMissions) localStorage.setItem("completedMissions", data.completedMissions);
+    alert("Save restored. Reload or return to game.");
+  } catch (e) {
+    alert("Invalid save code.");
+  }
+}
+</script>

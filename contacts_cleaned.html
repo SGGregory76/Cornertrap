@@ -1,0 +1,30 @@
+<!-- Cleaned Contacts Page -->
+<div style="max-width:360px;margin:20px auto;padding:15px;background:#0e0e0e;font-family:'Segoe UI',sans-serif;color:#fff;border-radius:12px;">
+  <h3 style="text-align:center;margin-bottom:15px;">Your Contacts</h3>
+  <div id="contactsList" style="display:flex;flex-direction:column;gap:10px;"></div>
+</div>
+
+<script>
+const contacts = [
+  { name: "Rico", role: "Enforcer", mood: "Wary", rep: 45, link: "https://hustletrap.blogspot.com/2025/04/rico.html?m=1" },
+  { name: "Maya", role: "Courier", mood: "Neutral", rep: 30, link: "https://hustletrap.blogspot.com/2025/04/maya.html?m=1" },
+  { name: "Lex", role: "Chemist", mood: "Trusting", rep: 60, link: "https://hustletrap.blogspot.com/2025/04/lex.html?m=1" }
+];
+
+function renderContacts() {
+  const container = document.getElementById("contactsList");
+  container.innerHTML = "";
+  contacts.forEach(contact => {
+    const block = document.createElement("div");
+    block.style = "background:#1a1a1a;padding:10px;border-radius:8px;";
+    block.innerHTML = `
+      <strong>${contact.name}</strong> - ${contact.role}<br>
+      Mood: ${contact.mood} | REP: ${contact.rep}<br>
+      <a href="${contact.link}" target="_blank" style="color:#4af;">View Profile</a>
+    `;
+    container.appendChild(block);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", renderContacts);
+</script>
